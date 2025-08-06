@@ -1,0 +1,11 @@
+<!-- Display for a user with disbaled role -->
+<%- include('partials/header.ejs') %>
+<%- include('partials/navbar1.ejs') %>
+
+<div class="container mt-5 text-center">
+  <h2 class="text-danger">Access Denied</h2>
+  <p><%= message %></p>
+  <a href="/login" class="btn btn-outline-success contact-submit-btn" style="color: #1f11ea;">Return to Login</a>
+</div>
+
+<%- include('partials/footer.ejs') %>

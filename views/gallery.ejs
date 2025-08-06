@@ -1,0 +1,141 @@
+<!-- Gallery Page view -->
+<html>
+  <head>
+    <%- include('partials/header.ejs') %>
+    <title>Gallery - Tiny Treasures</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+      .gallery-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+
+      .gallery-img:hover {
+        transform: scale(1.03);
+      }
+
+      /* Lightbox modal styling */
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1050;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+
+      .lightbox-content {
+        margin: auto;
+        display: block;
+        max-width: 80%;
+        max-height: 80%;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .lightbox-content {
+          max-width: 90%;
+          max-height: 70%;
+        }
+      }
+    </style>
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    <%- include('partials/navbar1.ejs') %>
+
+    <div class="container flex-grow-1 mt-5">
+      <h2 class="text-center mb-4" style="color: #1f11ea;">Our Learning Moments</h2>
+
+      <p class="text-center" style="color: #1f11ea;">
+        Take a look at some special moments from our home-based learning experiences.
+      </p>
+
+      <div class="row mt-4">
+        <% const images = [
+          'gal1.jpg',
+          'gal2.jpg',
+          'gal3.jpg',
+          'gal4.jpg',
+          'gal5.jpg',
+          'gal6.jpg'
+        ]; %>
+
+        <% images.forEach((img) => { %>
+          <div class="col-sm-6 col-md-4 mb-4">            
+            <img src="/images/<%= img %>" alt="Gallery Image" class="gallery-img" onclick="openLightbox('/images/<%= img %>')" />
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- Display as a Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+      <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+      <img class="lightbox-content" id="lightbox-image">
+    </div>
+
+    <script>
+    const images = <%- JSON.stringify(images) %>;
+    let currentIndex = -1;
+
+    function openLightbox(src) {
+      currentIndex = images.findIndex(img => '/images/' + img === src);
+      showImage();
+      document.getElementById('lightbox').style.display = 'block';
+    }
+
+    function showImage() {
+      if (currentIndex >= 0 && currentIndex < images.length) {
+        document.getElementById('lightbox-image').src = '/images/' + images[currentIndex];
+      }
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+      currentIndex = -1;
+    }
+
+    function showNext() {
+      if (currentIndex < images.length - 1) {
+        currentIndex++;
+        showImage();
+      }
+    }
+
+    function showPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showImage();
+      }
+    }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('lightbox').style.display === 'block') {
+      if (e.key === 'ArrowRight') showNext();
+      else if (e.key === 'ArrowLeft') showPrev();
+      else if (e.key === 'Escape') closeLightbox();
+    }
+  });
+</script>
+    <%- include('partials/footer.ejs') %>
+  </body>
+</html>

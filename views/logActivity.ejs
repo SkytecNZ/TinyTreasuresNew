@@ -1,0 +1,84 @@
+<%- include('partials/header.ejs') %>
+<%- include('partials/navbar2.ejs') %>
+
+<% if (success) { %>
+  <div style="
+      background-color: #d4edda;
+      color: #155724;
+      border: 2px solid #155724;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      position: relative;">
+    ✅ Activity log saved successfully.
+    <a href="/teacher/dashboard" style="
+        position: absolute;
+        right: 15px;
+        top: 5px;
+        font-weight: bold;
+        color: #155724;
+        text-decoration: none;
+        font-size: 20px;">✖</a>
+  </div>
+<% } %>
+
+
+
+<!-- START of flex container -->
+<div class="d-flex flex-column min-vh-80">
+
+  <!-- Main content area -->
+  <main class="container mt-5 mb-4 flex-grow-1">
+    <h3>Log Daily Activity</h3>
+
+    <div class="card mt-4 shadow p-4">
+      <form action="/teacher/log-activity/<%= child.id %>" method="POST">
+        <input type="hidden" name="child_id" value="<%= child.id %>">
+
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="childId" class="form-label">Child ID:</label>
+            <input type="text" id="childId" class="form-control" value="<%= child.id %>" readonly>
+          </div>
+          <div class="col-md-9">
+            <label for="childName" class="form-label">Child Name:</label>
+            <input type="text" id="childName" class="form-control" value="<%= child.first_name %> <%= child.last_name %>" readonly>
+          </div>
+
+          <div class="col-md-6">
+            <label for="Educator" class="form-label">Educator</label>
+            <input type="text" class="form-control" value="<%= teacherName %>" readonly>
+          </div>
+          <div class="col-md-6">
+            <label for="date" class="form-label">Date:</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="in_time" class="form-label">In Time:</label>
+            <input type="time" id="in_time" name="in_time" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label for="out_time" class="form-label">Out Time:</label>
+            <input type="time" id="out_time" name="out_time" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="activities" class="form-label">Activities Done:</label>
+          <textarea id="activities" name="activities" rows="2" class="form-control" placeholder="Write what the child did today..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Daily Log</button>
+        <a href="/membersOnly" class="btn btn-secondary ms-2">Cancel</a>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <%- include('partials/footer') %>
+
+</div> <!-- END of flex container -->

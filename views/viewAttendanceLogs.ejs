@@ -1,0 +1,83 @@
+<!-- Educator view for previous attendance logs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/header.ejs') %>
+    <style>
+        .table td, .table th {
+            text-align: left;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/navbar2.ejs') %>
+
+    <div class="container mt-5">
+        <h3>Daily Attendance Logs for "<%= child.first_name %> <%= child.last_name %>"</h3>
+        <% if (logs.length > 0) { %>
+            <div class="table-responsive" style="max-height: 500px; overflow: auto;">       
+                <table class="table table-bordered">
+                <thead class="table-secondary">
+                        <tr>
+                            <th>Date</th>
+                            <th>Educator</th>
+                            <th>In Time</th>
+                            <th>Out Time</th>
+                            <th>Activities</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% logs.forEach(log => { %>
+                            <tr>
+                                <td><%= log.date.toLocaleDateString('en-NZ') %></td>
+                                <td><%= log.teacher || 'Unknown' %></td>
+                                <td><%= log.in_time %></td>
+                                <td><%= log.out_time %></td>
+                                <td><%= log.activities %></td>                                
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="mt-4">No attendance logs found for this child.</p>
+        <% } %>
+
+            <!-- Pagination -->
+<% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+  <nav aria-label="Attendance logs pagination">
+    <ul class="pagination justify-content-center mt-4">
+      <!-- Previous -->
+      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+        <a class="page-link" href="?page=<%= currentPage - 1 %>" tabindex="-1">Previous</a>
+      </li>
+
+      <!-- Page numbers -->
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+
+      <!-- Next -->
+      <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+        <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+      </li>
+    </ul>
+  </nav>
+<% } %>
+
+        <a href="/teacher/dashboard" class="btn btn-secondary btn-modern mt-4">Back to Dashboard</a>
+    </div>
+
+     
+
+        <a href="/membersOnly" class="btn btn-secondary mt-3">Back to Admin Panel</a>
+    </div>
+
+    <%- include('partials/footer.ejs') %>
+</body>
+</html>

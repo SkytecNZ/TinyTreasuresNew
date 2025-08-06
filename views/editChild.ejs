@@ -1,0 +1,88 @@
+<!-- Admin user Edit Child details using View Register -->
+<%- include('partials/header.ejs') %>
+<%- include('partials/navbar2.ejs') %>
+
+<!-- Sucess message line 6 to 10-->
+<% if (success && success.length > 0) { %>
+  <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert"
+  style="background-color: #155724; color: white; padding: 12px 20px; border-radius: 6px;">
+    <span><%= success %></span>
+    <a href="/admin/childDetails" class="btn-close" aria-label="Close"></a>
+  </div>
+<% } %>
+
+<div class="container mt-5">
+  <h2>Edit Child Details</h2>
+
+  <form action="/admin/edit-child/<%= child.id %>" method="POST" enctype="multipart/form-data">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">First Name</label>
+        <input type="text" name="first_name" value="<%= child.first_name %>" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Last Name</label>
+        <input type="text" name="last_name" value="<%= child.last_name %>" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Gender</label>
+        <select name="gender" class="form-select" required>
+          <option value="Male" <%= child.gender === 'Male' ? 'selected' : '' %>>Male</option>
+          <option value="Female" <%= child.gender === 'Female' ? 'selected' : '' %>>Female</option>
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Date of Birth</label>
+        <input type="date" name="dob" value="<%= child.dob.toISOString().slice(0,10) %>" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Food Allergy</label>
+        <input type="text" name="food_allergy" value="<%= child.food_allergy %>" class="form-control">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Enrolled Status</label>
+        <select name="status" class="form-select" required>
+          <option value="Enrolled" <%= child.status === 'Active' ? 'selected' : '' %>>Enrolled</option>
+          <option value="Deactivated" <%= child.status === 'Disabled' ? 'selected' : '' %>>Deactivated</option>
+        </select>          
+      </div>
+
+
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Parent First Name</label>
+        <input type="text" name="parent_first_name" value="<%= child.parent_first_name %>" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Parent Last Name</label>
+        <input type="text" name="parent_last_name" value="<%= child.parent_last_name %>" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Parent Email</label>
+        <input type="email" name="parent_email" value="<%= child.parent_email %>" class="form-control" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Parent Phone</label>
+        <input type="text" name="parent_phone" value="<%= child.parent_phone %>" class="form-control">
+      </div>
+      <div class="col-md-12 mb-3">
+  <label class="form-label">Current Picture</label><br>
+  <% if (child.picture) { %>
+    <img src="/uploads/<%= child.picture %>" alt="Child Picture" style="width: 120px;">
+  <% } else { %>
+    <p>No picture available.</p>
+  <% } %>
+</div>
+<div class="col-md-12 mb-3">
+  <label class="form-label">Upload New Picture (optional)</label>
+  <input type="file" name="picture" accept="image/*" class="form-control">
+  <input type="hidden" name="existing_picture" value="<%= child.picture %>">
+</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="/admin/childDetails" class="btn btn-secondary ms-3">Cancel</a>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

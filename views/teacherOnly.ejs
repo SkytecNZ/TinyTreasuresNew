@@ -1,0 +1,88 @@
+<!-- Educator Dashboard -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/header.ejs') %>
+    <title>Educator Dashboard - Tiny Treasures</title>
+</head>
+<body>
+<%- include('partials/navbar2.ejs') %>
+
+<div class="container mt-5">
+    <h2>Educator Dashboard</h2>
+    <p>Welcome, <strong><%= teacherName %></strong> (<%= teacherEmail %>)</p>
+    <p class="text-muted">Click "Select" to add daily attendance and activities.</p>
+
+    <table class="table table-bordered table-hover mt-4">
+        <thead class="table-primary">
+            <tr>
+                <th>Picture</th>
+                <th>Child ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>Allergies</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (child && child.length > 0) { %>
+                <% child.forEach(child => { %>
+                    <tr>
+                        <td>
+                            <% if (child.picture) { %>
+                                <img src="/uploads/<%= child.picture %>" width="60" height="60" class="img-thumbnail" alt="Child Photo">
+                            <% } else { %>
+                                <span>No Photo</span>
+                            <% } %>
+                        </td>
+                        <td><%= child.id %></td>
+                        <td><%= child.first_name %></td>
+                        <td><%= child.last_name %></td>
+                        <td><%= child.gender %></td>
+                        <td><%= child.dob.toISOString().substring(0, 10) %></td>
+                        <td><%= child.food_allergy ? child.food_allergy : 'None' %></td>
+                        <td>
+                            <a href="/teacher/log-activity/<%= child.id %>" class="btn btn-primary btn-sm me-1">Select</a>
+                            <a href="/teacher/view-attendance/<%= child.id %>" class="btn btn-secondary btn-sm">View Logs</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="8" class="text-center">No children found.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<!-- Pagination -->
+<% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+  <nav aria-label="Children pagination">
+    <ul class="pagination justify-content-center mt-4">
+
+      <!-- Previous -->
+      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+        <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+      </li>
+
+      <!-- Page numbers -->
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+
+      <!-- Next -->
+      <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+        <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+      </li>
+    </ul>
+  </nav>
+<% } %>
+
+
+<%- include('partials/footer') %>
+</body>
+</html>

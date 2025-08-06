@@ -1,0 +1,204 @@
+h1 {
+    color:#1F11EA;
+}
+
+h2 {
+    color:#1F11EA;
+}
+
+h3 {
+    color:#1F11EA;
+}
+h4, h5, h6 {
+    color:#1F11EA;
+}
+.img {
+    float:right;
+    max-width:600px;
+    margin-left:50px;
+    
+}
+
+ .contact-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 20px;
+      color: #1f11ea;
+ }
+
+/* .footer {
+    /* margin: 350px auto; /* Centers the footer */
+} */
+.footer {
+    width: 100%;
+    background-color: #fdded7;
+    padding: 20px 0;
+    color: #1f11ea;
+    font-family: 'Jaini Purva', cursive;
+    margin-top: auto;
+}
+body, html {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1; /* Pushes footer to bottom if not enough content */
+}
+table {
+    width: 100%;
+    text-align: center;
+}
+/* Optional: Make sure footer links wrap on mobile */
+@media (max-width: 768px) {
+    .footer .row {
+        text-align: center;
+    }
+}
+
+
+
+
+table {
+    border:1px solid;
+    width:100%;
+    text-align:center;
+}
+
+th {
+    border:1px solid; 
+    font-size:20px;
+}
+td {
+    border:1px solid;
+}
+
+.copyright {
+    margin-left:570px;
+}
+
+/* .footer1 {
+    margin-top:50px;
+} */
+
+.login {
+    text-align: center;
+    border: 2px solid #1F11EA; /* Adds a border around the login section */
+    margin: 100px auto; /* Centers the element horizontally */
+    width: 50%; /* Adjust the width as per your design */
+    max-width: 400px; /* Ensures it doesn't stretch too much on large screens */
+    padding: 20px; /* Adds inner space */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for better aesthetics */
+    border-radius: 10px; /* Rounds the corners */
+    background-color: #f9f9f9; /* Adds a light background */
+}
+.contact-submit-btn:hover {
+      color: #fff !important;
+      background-color: #1f11ea !important;
+    }
+
+
+
+#password {
+    margin-left:5px;
+}
+
+.member {
+    margin-left:50px;
+}
+
+/* .footer2 {
+    margin-top:200px;
+} */
+
+
+
+.c {
+    margin-left:80px;
+}
+
+.img3 {
+    float:right;
+    max-width:150px;
+    margin-right:700px;
+}
+
+.h {
+    margin-left:475px;
+    margin-top: 10px;
+}
+
+.order {
+    margin-left:50px;
+}
+
+/* .footer3 {
+    margin-top:100px;
+} */
+
+#name {
+    margin-left:45px;
+}
+
+.blue-form {
+  color: #1f11ea;
+}
+
+#type {
+    margin-left:15px;
+}
+
+#food {
+    margin-left:15px;
+}
+
+#quantity {
+    margin-left:25px;
+}
+
+/* .footer4 {
+    margin-top:150px;
+} */
+
+.img4 {
+    float:left;
+    max-width:250px;
+}
+
+.img5 {
+    float:right;
+    max-width:300px;
+    margin-right:600px; 
+}
+
+.g {
+    margin-left:85px;
+}
+
+.e {
+    margin-left:510px;
+}
+
+.img6 {
+    float:left;
+    max-width:250px;
+}
+
+.img7 {
+    float:right;
+    max-width:200px;
+    margin-right:700px;  
+}
+
+.f {
+    margin-left:80px;
+}
+
+.card {
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}

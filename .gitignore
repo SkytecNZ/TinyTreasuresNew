@@ -1,0 +1,6 @@
+# These files will not be uploaded to GitHub
+node_modules/ 
+.env   
+package-lock.json
+.DS_Store
+*.log

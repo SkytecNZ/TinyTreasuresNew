@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header.ejs') %>
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Thank You - Tiny Treasures</title>
+  <style>
+    body {
+      background-color: #f0f4ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #1f11ea;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    .thankyou-message {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    a.button-link {
+      display: inline-block;
+      text-decoration: none;
+      color: #ffffff;
+      background-color: #1f11ea;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    a.button-link:hover {
+      background-color: #0d0a90;
+    }
+  </style>
+
+  <script>
+    // Redirect to home page after 3 seconds
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 3000);
+  </script>
+</head>
+
+<body>
+  <%- include('partials/navbar1.ejs') %>
+
+  <div class="thankyou-message">
+    <h2>Thank you for contacting us!</h2>
+    <p>Your message has been received successfully
+      <br>Redirecting to home...</p>    
+    <p></p>
+    <br>  
+    <a href="/" class="button-link">Back to Home</a>
+  </div>
+</body>
+
+</html>

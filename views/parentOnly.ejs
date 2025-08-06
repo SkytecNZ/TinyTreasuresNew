@@ -1,0 +1,81 @@
+<!-- Parents Dashboard page with drop down for multiple children-->
+<%- include('partials/header.ejs') %>
+<%- include('partials/navbar2.ejs') %>
+
+<div class="container mt-4">
+  <h2>Parent Dashboard</h2>
+  Welcome, <br> <%= parentName %> - (<%= parentEmail %>)
+  
+  <% if (children.length > 0) { %>
+    <form method="GET" action="/membersOnly" class="mb-4">
+      <label for="childSelect" class="form-label"><strong>Select Child:</strong></label>
+      <select id="childSelect" name="childId" class="form-select" onchange="this.form.submit()">
+        <% children.forEach(child => { %>
+          <option value="<%= child.id %>" <% if (child.id == selectedChildId) { %> selected <% } %>>
+            <%= child.first_name %> <%= child.last_name %>
+          </option>
+        <% }) %>
+      </select>
+    </form>
+
+    <h4>Daily Activity Logs</h4>
+    <% if (logs.length > 0) { %>
+       <!-- Scrollable Table -->
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-bordered table-striped mt-3">
+          <thead class="table-primary">
+            <tr>
+              <th>Date</th>
+              <th>Educator</th>
+              <th>In Time</th>
+              <th>Out Time</th>
+              <th>Activities</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% logs.forEach(log => { %>
+              <tr>
+                <td><%= log.date.toISOString().slice(0,10) %></td>
+                <td><%= log.teacher || 'Unknown' %></td>
+                <td><%= log.in_time %></td>
+                <td><%= log.out_time %></td>
+                <td><%= log.activities %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mt-4">
+            <!-- Previous -->
+            <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+              <a class="page-link" href="?childId=<%= selectedChildId %>&page=<%= currentPage - 1 %>">Previous</a>
+            </li>
+            <!-- Page numbers -->
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="?childId=<%= selectedChildId %>&page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+            <!-- Next -->
+            <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+              <a class="page-link" href="?childId=<%= selectedChildId %>&page=<%= currentPage + 1 %>">Next</a>
+            </li>
+          </ul>
+        </nav>
+      <% } %>
+
+    <% } else { %>
+      <p>No activity logs found for this child.</p>
+    <% } %>
+
+  <% } else { %>
+    <br>
+    <p><strong>You don't have any enrolled children. Please contact Tiny Treasures.</strong></p>
+  <% } %>
+</div>
+
+<%- include('partials/footer.ejs') %>

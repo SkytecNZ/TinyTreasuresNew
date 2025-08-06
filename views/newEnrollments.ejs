@@ -1,0 +1,110 @@
+<!-- New Enrollment Page -->
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('partials/header.ejs') %>
+    <title>New Child Enrollment - Tiny Treasures</title>
+</head>
+<body>
+    <%- include('partials/navbar2.ejs') %>
+
+    <!-- Sucess message -->
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success d-flex justify-content-between align-items-center" role="alert"
+       style="background-color: #155724; color: white; padding: 12px 20px; border-radius: 6px;">
+    <span><%= success %></span>
+    <a href="/admin/childDetails" class="btn-close" aria-label="Close"></a>
+  </div>
+<% } %>
+<!-- Error message -->
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger" role="alert">
+    <%= error %>
+  </div>
+<% } %>
+
+    <div class="container mt-5">
+        <h2>New Child Enrollment</h2>
+
+        <form action="/admin/newEnrollments" method="POST" enctype="multipart/form-data">
+
+            <!-- Child Information -->
+           <h5 class="mt-4">Child Information</h5>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="first_name" class="form-label">First Name:</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="last_name" class="form-label">Last Name:</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" required>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="gender" class="form-label">Gender:</label>
+        <select class="form-select" id="gender" name="gender" required>
+            <option value="">-Select Gender-</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label for="dob" class="form-label">Date of Birth:</label>
+        <input type="date" class="form-control" id="dob" name="dob" required>
+    </div>
+</div>
+
+            <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="picture" class="form-label">Child Picture (filename):</label>
+                <input type="file" class="form-control" id="picture" name="picture" accept="image/*" not required>
+                <!-- <input type="file" class="form-control" id="picture" name="picture" placeholder="e.g., child1.jpg" required> -->
+            </div>
+            <div class="col-md-6 mb-3">
+            <label for="status" class="form-label">Enrolled Status:</label>
+            <select class="form-select" id="status" name="status" required>
+            <option value="">-Status-</option>
+            <option value="Active" selected>Active</option> 
+            <!-- <option value="Deactivated">Deactivated</option> make it Active by default -->
+        </select>
+    </div>
+            </div>
+            <div class="mb-3">
+                <label for="food_allergy" class="form-label">Food Allergy (if any):</label>
+                <textarea class="form-control" id="food_allergy" name="food_allergy" rows="3"></textarea>
+            </div>
+
+            <!-- Parent Information -->
+            <h5 class="mt-4">Parent Information</h5>
+            
+            <div class="row">            
+            <div class="col-md-6 mb-3">
+                <label for="parent_first_name" class="form-label">Parent First Name:</label>
+                <input type="text" class="form-control" id="parent_first_name" name="parent_first_name" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="parent_last_name" class="form-label">Parent Last Name:</label>
+                <input type="text" class="form-control" id="parent_last_name" name="parent_last_name" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="parent_email" class="form-label">Parent Email:</label>
+                <input type="email" class="form-control" id="parent_email" name="parent_email" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="parent_phone" class="form-label">Parent Phone:</label>
+                <input type="tel" class="form-control" id="parent_phone" name="parent_phone" required>
+            </div>
+        </div>
+
+            <button type="submit" class="btn btn-primary">Enroll Child</button>
+            <a href="/membersOnly" class="btn btn-secondary ms-3">Cancel</a>
+        </form>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!-- Childcare registry to display under Admin dashboard -->
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('partials/header.ejs') %>
+    <title>Tiny Treasures Child Register</title>
+</head>
+<body>
+    <%- include('partials/navbar2.ejs') %>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Tiny Treasures Child Register</h2>  
+
+        <!-- Success flash message -->
+    <% if (locals.success) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= locals.success %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+
+
+        <% if (children.length > 0) { %>
+            <div class="table-responsive" style="max-height: 500px; overflow: auto;">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Picture</th>
+                            <th>Child ID</th>
+                            <th>Child Name</th>                            
+                            <th>Gender</th>
+                            <th>Date of Birth</th>                            
+                            <th>Food Allergy</th>
+                            <th>Parent Name</th>
+                            <th>Parent Email</th>
+                            <th>Parent Phone</th>
+                            <th>Date Registered</th>
+                            <th>Enrolled Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% children.forEach(child => { %>
+                            <tr>
+                                <td>
+                                    <% if (child.picture) { %>
+                                        <img src="/uploads/<%= child.picture %>" alt="Child Image" style="width: 70px; height: 70px;">
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td><%= child.id %></td>
+                                <td><%= child.first_name %> <%= child.last_name %></td>
+                                <td><%= child.gender %></td>
+                                <td><%= child.dob.toISOString().slice(0,10) %></td>
+                                
+                                <td><%= child.food_allergy || 'None' %></td>
+                                <!-- <td><%= child.parent_name %></td> -->
+                                <td><%= child.parent_first_name %> <%= child.parent_last_name %></td>
+                                <!-- <td><%= child.parent_email %></td>  -->
+                                <td>
+                                <a href="mailto:<%= child.parent_email %>"><%= child.parent_email %></a>
+                                </td> 
+                                <td><%= child.parent_phone %></td>                              
+                                <td><%= child.date ? child.date.toISOString().slice(0,10) : 'N/A' %></td>
+                                <td><%= child.status %></td>
+                                <td>
+                <a href="/admin/edit-child/<%= child.id %>" class="btn btn-primary btn-sm mb-1">Update</a>
+                
+            </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+      
+        <!-- Pagination -->
+       <br>
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+
+    <!-- Previous button -->
+    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+      <a class="page-link" href="?page=<%= currentPage - 1 %>" tabindex="-1">Previous</a>
+    </li>
+
+    <!-- Page numbers -->
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+      </li>
+    <% } %>
+
+    <!-- Next button -->
+    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+      <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+    </li>
+  </ul>
+</nav>      
+
+
+
+
+        <% } else { %>
+            <p>No children found in the register.</p>
+        <% } %>
+        <br>
+        <a href="/membersOnly" class="btn btn-secondary mb-4">Back to Admin Panel</a>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

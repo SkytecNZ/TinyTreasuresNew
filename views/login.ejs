@@ -1,0 +1,54 @@
+<!-- Login page -->
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/header.ejs') %>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css"> 
+</head>
+
+<body>
+  <%- include('partials/navbar1.ejs') %>
+
+  <div class="login">
+    <h1>User Login</h1>
+    <br>
+
+    <form id="loginForm" action="/auth" method="post">
+      <div style="text-align: left; color: #1f11ea;">
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Email" id="email" required style="width: 285px; padding: 6px;">
+        <br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Password" id="password" required style="width: 250px; padding: 6px;">
+        <br><br>
+      </div>
+
+      <button type="submit" class="btn btn-outline-success contact-submit-btn" style="color: #1f11ea;">SUBMIT</button>
+
+      <!-- Cancel button to clear form fields -->
+      <a href="#" onclick="clearLoginForm(event)" class="btn btn-outline-success contact-submit-btn"
+         style="color: #1f11ea; text-decoration: none; margin-left: 10px;">CANCEL</a>
+    </form>
+     <div style="margin-top: 10px;">
+      <a href="/forgot-password" style="color: #1f11ea;">Forgot your password?</a>
+    </div>
+  </div>
+   
+
+  <!-- Footer -->
+  <div class="footer1">
+    <%- include('partials/footer.ejs') %>
+  </div>
+
+  <!-- Script to clear form -->
+  <script>
+    function clearLoginForm(event) {
+      event.preventDefault();
+      document.getElementById('loginForm').reset();
+    }
+  </script>
+</body>
+</html>
+<!-- End of Login page -->
