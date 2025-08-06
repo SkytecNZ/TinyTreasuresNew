@@ -1,4 +1,4 @@
-<!-- Home page with slideshow of 3 images -->
+<!-- Home page with auto-slideshow -->
 <html>
   <head>
     <%- include('partials/header.ejs') %>
@@ -30,32 +30,7 @@
       .carousel-img {
         width: 100%;
         border-radius: 10px;
-      }
-
-      .carousel-indicators {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        background: rgba(255, 255, 255, 0.7);
-        padding: 5px 10px;
-        border-radius: 20px;
-      }
-
-      .indicator {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: #ccc;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .indicator.active {
-        background-color: #1f11ea;
+        transition: opacity 1s ease-in-out;
       }
     </style>
   </head>
@@ -93,11 +68,6 @@
         <!-- Image carousel on the right -->
         <div class="carousel-container">
           <img id="carouselImage" class="carousel-img" src="/images/home1.jpg" alt="Childcare Image" />
-          <div class="carousel-indicators">
-            <span class="indicator active" onclick="setImage(0)"></span>
-            <span class="indicator" onclick="setImage(1)"></span>
-            <span class="indicator" onclick="setImage(2)"></span>
-          </div>
         </div>
       </div>
     </div>
@@ -107,19 +77,19 @@
     <script>
       const images = ["/images/home1.jpg", "/images/home2.jpg", "/images/home3.jpg"];
       let currentIndex = 0;
+      const carouselImage = document.getElementById("carouselImage");
 
-      function setImage(index) {
-        currentIndex = index;
-        document.getElementById("carouselImage").src = images[index];
-        updateIndicators();
+      function showNextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        carouselImage.style.opacity = 0;
+        setTimeout(() => {
+          carouselImage.src = images[currentIndex];
+          carouselImage.style.opacity = 1;
+        }, 500); // fade out before changing image
       }
 
-      function updateIndicators() {
-        const indicators = document.querySelectorAll('.indicator');
-        indicators.forEach((dot, idx) => {
-          dot.classList.toggle('active', idx === currentIndex);
-        });
-      }
+      // Start the slideshow
+      setInterval(showNextImage, 4000); // change image every 3 seconds
     </script>
   </body>
 </html>

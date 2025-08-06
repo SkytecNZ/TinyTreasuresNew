@@ -930,7 +930,7 @@ app.post('/forgot-password', (req, res) => {
           }
           .btn {
             display: inline-block;
-            background-color: #ff6b6b;
+            background-color: #55d4c7ff;
             color: black;
             padding: 12px 20px;
             border-radius: 6px;
