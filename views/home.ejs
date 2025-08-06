@@ -1,44 +1,125 @@
-<!-- Home page -->
+<!-- Home page with slideshow of 3 images -->
 <html>
   <head>
     <%- include('partials/header.ejs') %>
     <title>Welcome to Tiny Treasures</title>
+    <style>
+      .main-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .text-content {
+        flex: 1;
+        padding-right: 20px;
+        min-width: 300px;
+        color: #1f11ea;
+      }
+
+      .carousel-container {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .carousel-img {
+        width: 100%;
+        border-radius: 10px;
+      }
+
+      .carousel-indicators {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 5px 10px;
+        border-radius: 20px;
+      }
+
+      .indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #ccc;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .indicator.active {
+        background-color: #1f11ea;
+      }
+    </style>
   </head>
+
   <body class="d-flex flex-column min-vh-100">
     <%- include('partials/navbar1.ejs') %>
+
     <div class="container flex-grow-1">
-      <br />
-      <h1>Welcome to Tiny Treasures</h1>
-      <br />
-      <img class="img" src="/images/home3.jpg" alt="Childcare" />
-      <br />
-      <h5 style="color: #1f11ea;">
-        Childcare - Auckland's New Home-Based Early Learning Movement
-      </h5>
-      <p style="text-align: justify; color: #1f11ea;">
-        Tiny Treasures was founded by passionate parents committed to giving our pre-schoolers the best possible start in life. We're on a mission to nurture and inspire our youngest citizens through care, curiosity, and connection.
-      </p>
-      <p style="text-align: justify; color: #1f11ea;">
-        At Tiny Treasures, we believe every child is a unique individual, full of potential, with their own strengths and interests.  
-        Our home-based early learning programme provides a warm, secure, and enriching environment where children can learn, grow, and thrive.
-      </p>
-      <p style="text-align: justify; color: #1f11ea;">
-        We offer a variety of engaging experiences tailored to each child's developmental needs led by a team of qualified, experienced, and caring educators who share our passion for early childhood education.
-      </p>
-      <p style="text-align: justify; color: #1f11ea;">
-        Children are encouraged to explore, imagine, and discover at their own pace, while building strong, trusting relationships with their caregivers.
-      </p>
-      <p style="text-align: justify; color: #1f11ea;">
-        We prioritise small group settings to ensure each child receives focused attention and personalised learning. 
-        Visit our <a href="/gallery">Gallery</a> to see some of our recent learning moments.
-      </p>
-      <p style="text-align: justify; color: #1f11ea;">
-        We also work closely with families, recognising that parents are a child's first and most important teachers.
-      </p>
-      <p style="text-align: justify; color: #1f11ea;">
-        Please <a href="/contactus">Contact us</a> to learn more about our home-based early learning programme and how we can support your child's learning and development.
-      </p>
+      <br>
+      <h1 style="color: #1f11ea; text-align: center;">Welcome to Tiny Treasures</h1>
+      <br>
+
+      <div class="main-content">
+        <!-- Text section on the left -->
+        <div class="text-content">
+          <h5><b>Auckland's New Home-Based Early Learning Movement</b></h5>
+          <br>
+          <p>
+            Tiny Treasures was founded by passionate parents committed to giving our pre-schoolers the best possible start in life.
+          </p>
+          <p>
+            At Tiny Treasures, we believe every child is a unique individual, full of potential, with their own strengths and interests. Our home-based early learning programme provides a warm, secure, and enriching environment where children can learn, grow, and thrive.
+          </p>
+          <p>
+            Children are encouraged to explore, imagine, and discover at their own pace, while building strong, trusting relationships with their caregivers.
+          </p>
+          <p>
+            We prioritise small group settings to ensure each child receives focused attention and personalised learning. Visit our <a href="/gallery">Gallery</a> to see some of our recent learning moments.
+          </p>
+          <p>
+            Please <a href="/contactus">Contact us</a> to learn more about our home-based early learning programme and how we can support your child's learning and development.
+          </p>
+        </div>
+
+        <!-- Image carousel on the right -->
+        <div class="carousel-container">
+          <img id="carouselImage" class="carousel-img" src="/images/home1.jpg" alt="Childcare Image" />
+          <div class="carousel-indicators">
+            <span class="indicator active" onclick="setImage(0)"></span>
+            <span class="indicator" onclick="setImage(1)"></span>
+            <span class="indicator" onclick="setImage(2)"></span>
+          </div>
+        </div>
+      </div>
     </div>
+
     <%- include('partials/footer.ejs') %>
+
+    <script>
+      const images = ["/images/home1.jpg", "/images/home2.jpg", "/images/home3.jpg"];
+      let currentIndex = 0;
+
+      function setImage(index) {
+        currentIndex = index;
+        document.getElementById("carouselImage").src = images[index];
+        updateIndicators();
+      }
+
+      function updateIndicators() {
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((dot, idx) => {
+          dot.classList.toggle('active', idx === currentIndex);
+        });
+      }
+    </script>
   </body>
 </html>
