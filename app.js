@@ -755,57 +755,105 @@ app.get('/forgot-password', (req, res) => {
   res.render('forgotPassword'); // render forgotPassword.ejs
 });
 
-// Handle Forgot Password submission with token generation and email sending
-app.post('/forgot-password', (req, res) => {
-  const email = req.body.email;
-  const token = crypto.randomBytes(32).toString('hex');
-  const expiry = new Date(Date.now() + 3600000); // 1 hour from now
-  console.log('Entering /forgot-password route with email:', email);
+// // Handle Forgot Password submission with token generation and email sending
+// app.post('/forgot-password', (req, res) => {
+//   const email = req.body.email;
+//   const token = crypto.randomBytes(32).toString('hex');
+//   const expiry = new Date(Date.now() + 3600000); // 1 hour from now
+//   console.log('Entering /forgot-password route with email:', email);
 
-  const findUserSql = 'SELECT * FROM users WHERE email = ?';
-  conn.query(findUserSql, [email], (err, results) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).send('Server error');
-    }
+//   const findUserSql = 'SELECT * FROM users WHERE email = ?';
+//   conn.query(findUserSql, [email], (err, results) => {
+//     if (err) {
+//       console.error('Database error:', err);
+//       return res.status(500).send('Server error');
+//     }
 
-    if (results.length === 0) {
-      return res.send('<h2 style="color: red;">No account found with that email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-    }
+//     if (results.length === 0) {
+//       return res.send('<h2 style="color: red;">No account found with that email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+//     }
 
-    const updateTokenSql = 'UPDATE users SET reset_token = ?, token_expiry = ? WHERE email = ?';
-    conn.query(updateTokenSql, [token, expiry, email], (err) => {
-      if (err) return res.status(500).send('Server error');
+//     const updateTokenSql = 'UPDATE users SET reset_token = ?, token_expiry = ? WHERE email = ?';
+//     conn.query(updateTokenSql, [token, expiry, email], (err) => {
+//       if (err) return res.status(500).send('Server error');
 
-      // Send email with reset link
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS,
-        }
-      });
+//       // Send email with reset link
+//       const transporter = nodemailer.createTransport({
+//         service: 'gmail',
+//         auth: {
+//           user: process.env.GMAIL_USER,
+//           pass: process.env.GMAIL_PASS,
+//         }
+//       });
 
-      const resetLink = `http://localhost:${process.env.PORT}/reset-password/${token}`;
-      const mailOptions = {
-        from: process.env.GMAIL_USER,
-        to: email,
-        subject: 'Tiny Treasures Password Reset',
-        html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset it. This link will expire in 1 hour.</p>`
-      };
+//       const resetLink = `http://localhost:${process.env.PORT}/reset-password/${token}`;
+//       const mailOptions = {
+//         from: process.env.GMAIL_USER,
+//         to: email,
+//         subject: 'Tiny Treasures Password Reset',
+//         html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset it. This link will expire in 1 hour.</p>`
+//       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error('Email send error:', error);
-          return res.status(500).send('Error sending email.');
-        }
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.error('Email send error:', error);
+//           return res.status(500).send('Error sending email.');
+//         }
+//         res.send('<h2 style="color: #1f11ea;">Reset link sent to your email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+//       });
+//     });
+//   });
+// });
 
-        res.send('<h2 style="color: #1f11ea;">Reset link sent to your email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-      });
-    });
-  });
-});
+// app.get('/reset-password/:token', (req, res) => {
+//     const token = req.params.token;
+//     console.log('Entering /reset-password/:token route with token:', token);
 
+//     // You can also verify the token here before rendering the form (optional)
+//     const sql = 'SELECT * FROM users WHERE reset_token = ? AND token_expiry > NOW()';
+//     conn.query(sql, [token], (err, results) => {
+//         if (err) {
+//             console.error('Error verifying reset token:', err);
+//             return res.send('<h2 style="color: red;">Something went wrong.</h2>');
+//         }
+
+//         if (results.length === 0) {
+//             return res.send('<h2 style="color: red;">Password reset link is invalid or has expired.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+//         }
+
+//         // Render the reset password form with the token
+//         console.log('Reset password form rendered for token:', token);    
+//         res.render('resetPassword', { token });
+//     });
+// });
+
+
+// app.post('/reset-password/:token', (req, res) => {
+//   const token = req.params.token;
+//   const newPassword = req.body.password;
+
+//   const sql = 'SELECT * FROM users WHERE reset_token = ? AND token_expiry > NOW()';
+//   conn.query(sql, [token], (err, results) => {
+//     if (err || results.length === 0) {
+//       return res.send('<h2 style="color: red;">Invalid or expired reset link.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+//     }
+
+//     const userId = results[0].userId;
+
+//     bcrypt.hash(newPassword, saltRounds, (err, hashedPassword) => {
+//       if (err) return res.status(500).send('Hashing error');
+
+//       const updateSql = 'UPDATE users SET password = ?, reset_token = NULL, token_expiry = NULL WHERE userId = ?';
+//       conn.query(updateSql, [hashedPassword, userId], (err) => {
+//         if (err) return res.status(500).send('Server error');
+//         res.send('<h2 style="color: #1f11ea;">Password updated successfully.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+//       });
+//     });
+//   });
+// });
+
+
+// Stylised email for password reset
 app.get('/reset-password/:token', (req, res) => {
     const token = req.params.token;
     console.log('Entering /reset-password/:token route with token:', token);
@@ -828,7 +876,123 @@ app.get('/reset-password/:token', (req, res) => {
     });
 });
 
+app.post('/forgot-password', (req, res) => {
+  const { email } = req.body;
 
+  if (!email) {
+    req.flash('error', 'Email is required.');
+    return res.redirect('/forgot-password');
+  }
+
+  // Generate secure token and set expiry to 1 hour from now
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokenExpiry = new Date(Date.now() + 3600000);  // 1 hour
+
+  // Update the user with reset token and expiry
+  const updateSql = `UPDATE users SET reset_token = ?, token_expiry = ? WHERE email = ?`;
+  conn.query(updateSql, [token, tokenExpiry, email], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      req.flash('error', 'An error occurred. Please try again.');
+      return res.redirect('/forgot-password');
+    }
+
+    if (result.affectedRows === 0) {
+      req.flash('error', 'No user found with that email.');
+      return res.redirect('/forgot-password');
+    }
+
+    const resetLink = `http://localhost:${process.env.PORT}/reset-password/${token}`;
+
+    const htmlEmail = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f5f2;
+            color: #333;
+            padding: 20px;
+          }
+          .email-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          }
+          .header {
+            text-align: center;
+            color: #1f11ea;
+            font-size: 24px;
+          }
+          .btn {
+            display: inline-block;
+            background-color: #ff6b6b;
+            color: black;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+          }
+          .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #1f11ea;
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="header">Tiny Treasures Password Reset</div>
+          <p>Hi there,</p>
+          <p>We received a request to reset your password for your Tiny Treasures account.</p>
+          <p style="text-align: center;">
+            <a href="${resetLink}" class="btn">Reset Password</a>
+          </p>
+          <p>If you did not request this, you can safely ignore this email. This link will expire in 1 hour.</p>
+          <div class="footer">
+            Tiny Treasures Childcare &copy; 2025<br>
+            Glen Eden, Auckland, NZ
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Send the email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: email,
+      subject: 'Password Reset - Tiny Treasures',
+      html: htmlEmail
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error('Error sending email:', err);
+        req.flash('error', 'Could not send reset email.');
+        return res.redirect('/forgot-password');
+      }
+
+      console.log('Reset email sent:', info.response);
+      // req.flash('success', 'Password reset link has been sent to your email.');
+      res.send('<h2 style="color: #1f11ea;">Reset link sent to your email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+      // res.redirect('/login');
+    });
+  });
+});
 app.post('/reset-password/:token', (req, res) => {
   const token = req.params.token;
   const newPassword = req.body.password;
@@ -852,6 +1016,8 @@ app.post('/reset-password/:token', (req, res) => {
     });
   });
 });
+
+
 
 // Educator dahsboard with child list pagination
 app.get('/teacher/dashboard', (req, res) => {
