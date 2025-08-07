@@ -695,7 +695,7 @@ app.post('/admin/edit-user/:email', isAdmin, (req, res) => {
   }
 
   if (password) {
-    // 🔒 Hash the new password
+    // Hash the new password
     bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
       if (err) {
         console.error('Password hashing failed:', err);
@@ -716,7 +716,7 @@ app.post('/admin/edit-user/:email', isAdmin, (req, res) => {
       });
     });
   } else {
-    // 👤 Update without password
+    // Update without password
     const updateQuery = 'UPDATE users SET username = ?, role = ? WHERE email = ?';
     const queryParams = [username, role, originalEmail];
 
@@ -754,104 +754,6 @@ app.get('/admin/delete-user/:email', isAdmin, (req, res) => {
 app.get('/forgot-password', (req, res) => {
   res.render('forgotPassword'); // render forgotPassword.ejs
 });
-
-// // Handle Forgot Password submission with token generation and email sending
-// app.post('/forgot-password', (req, res) => {
-//   const email = req.body.email;
-//   const token = crypto.randomBytes(32).toString('hex');
-//   const expiry = new Date(Date.now() + 3600000); // 1 hour from now
-//   console.log('Entering /forgot-password route with email:', email);
-
-//   const findUserSql = 'SELECT * FROM users WHERE email = ?';
-//   conn.query(findUserSql, [email], (err, results) => {
-//     if (err) {
-//       console.error('Database error:', err);
-//       return res.status(500).send('Server error');
-//     }
-
-//     if (results.length === 0) {
-//       return res.send('<h2 style="color: red;">No account found with that email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-//     }
-
-//     const updateTokenSql = 'UPDATE users SET reset_token = ?, token_expiry = ? WHERE email = ?';
-//     conn.query(updateTokenSql, [token, expiry, email], (err) => {
-//       if (err) return res.status(500).send('Server error');
-
-//       // Send email with reset link
-//       const transporter = nodemailer.createTransport({
-//         service: 'gmail',
-//         auth: {
-//           user: process.env.GMAIL_USER,
-//           pass: process.env.GMAIL_PASS,
-//         }
-//       });
-
-//       const resetLink = `http://localhost:${process.env.PORT}/reset-password/${token}`;
-//       const mailOptions = {
-//         from: process.env.GMAIL_USER,
-//         to: email,
-//         subject: 'Tiny Treasures Password Reset',
-//         html: `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset it. This link will expire in 1 hour.</p>`
-//       };
-
-//       transporter.sendMail(mailOptions, (error, info) => {
-//         if (error) {
-//           console.error('Email send error:', error);
-//           return res.status(500).send('Error sending email.');
-//         }
-//         res.send('<h2 style="color: #1f11ea;">Reset link sent to your email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-//       });
-//     });
-//   });
-// });
-
-// app.get('/reset-password/:token', (req, res) => {
-//     const token = req.params.token;
-//     console.log('Entering /reset-password/:token route with token:', token);
-
-//     // You can also verify the token here before rendering the form (optional)
-//     const sql = 'SELECT * FROM users WHERE reset_token = ? AND token_expiry > NOW()';
-//     conn.query(sql, [token], (err, results) => {
-//         if (err) {
-//             console.error('Error verifying reset token:', err);
-//             return res.send('<h2 style="color: red;">Something went wrong.</h2>');
-//         }
-
-//         if (results.length === 0) {
-//             return res.send('<h2 style="color: red;">Password reset link is invalid or has expired.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-//         }
-
-//         // Render the reset password form with the token
-//         console.log('Reset password form rendered for token:', token);    
-//         res.render('resetPassword', { token });
-//     });
-// });
-
-
-// app.post('/reset-password/:token', (req, res) => {
-//   const token = req.params.token;
-//   const newPassword = req.body.password;
-
-//   const sql = 'SELECT * FROM users WHERE reset_token = ? AND token_expiry > NOW()';
-//   conn.query(sql, [token], (err, results) => {
-//     if (err || results.length === 0) {
-//       return res.send('<h2 style="color: red;">Invalid or expired reset link.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-//     }
-
-//     const userId = results[0].userId;
-
-//     bcrypt.hash(newPassword, saltRounds, (err, hashedPassword) => {
-//       if (err) return res.status(500).send('Hashing error');
-
-//       const updateSql = 'UPDATE users SET password = ?, reset_token = NULL, token_expiry = NULL WHERE userId = ?';
-//       conn.query(updateSql, [hashedPassword, userId], (err) => {
-//         if (err) return res.status(500).send('Server error');
-//         res.send('<h2 style="color: #1f11ea;">Password updated successfully.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-//       });
-//     });
-//   });
-// });
-
 
 // Stylised email for password reset
 app.get('/reset-password/:token', (req, res) => {
@@ -1201,3 +1103,6 @@ const PORT = process.env.PORT || 3000; // Fallback to 3000 if env is missing
 app.listen(PORT, () => {
     console.log(`Node app is running on Port ${PORT}`);
 });
+
+
+// This is the end of the app.js file
