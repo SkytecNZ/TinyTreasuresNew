@@ -760,7 +760,6 @@ app.get('/reset-password/:token', (req, res) => {
     const token = req.params.token;
     console.log('Entering /reset-password/:token route with token:', token);
 
-    // You can also verify the token here before rendering the form (optional)
     const sql = 'SELECT * FROM users WHERE reset_token = ? AND token_expiry > NOW()';
     conn.query(sql, [token], (err, results) => {
         if (err) {
