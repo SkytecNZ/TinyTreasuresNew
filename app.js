@@ -1069,13 +1069,6 @@ app.get('/aboutus', function(req, res) {
     console.log('Rendered About us view');   
 });
 
-// Contact Us route
-app.get('/contactus', function(req, res) {
-    console.log('Entering /contact us route');
-    res.render('contactus');
-    console.log('Rendered contact us view');
-});
-
 // Route to Gallery page
 app.get('/gallery', (req, res) => {
     console.log('Entering /gallery route');
