@@ -617,9 +617,6 @@ app.post('/admin/edit-child/:id', upload.single('picture'), (req, res) => {
     }      
 
     console.log('Child record updated successfully:', { childId, first_name, last_name });
-    // res.send('<h2 style="color: green;">Child Record updated successfully.</h2> <a href="/admin/childDetails">' +
-    //   '<button style="margin-top: 15px; padding: 10px 20px; background-color: #888888; color: white; border: none; border-radius: 5px;">Back</button>' +
-    //   '</a>');
     req.flash('success', 'Child record updated successfully.');
     res.redirect(`/admin/edit-child/${childId}`);
   });
@@ -750,7 +747,7 @@ app.get('/admin/delete-user/:email', isAdmin, (req, res) => {
     });
 });
 
-// // Display Forgot Password Form
+// Display Forgot Password Form
 app.get('/forgot-password', (req, res) => {
   res.render('forgotPassword'); // render forgotPassword.ejs
 });
@@ -800,8 +797,9 @@ app.post('/forgot-password', (req, res) => {
 
     if (result.affectedRows === 0) {
       req.flash('error', 'No user found with that email.');
-      return res.redirect('/forgot-password');
-    }
+      console.log('No user found with email:', email);
+      res.send('<h2 style="color: red;">Email address not Registered!</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+     }
 
     const resetLink = `http://localhost:${process.env.PORT}/reset-password/${token}`;
 
@@ -883,17 +881,18 @@ app.post('/forgot-password', (req, res) => {
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
         console.error('Error sending email:', err);
-        req.flash('error', 'Could not send reset email.');
+        res.send('<h2 style="color: #1f11ea;">Incorrect Email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
+        // req.flash('error', 'Could not send reset email.');
         return res.redirect('/forgot-password');
       }
 
       console.log('Reset email sent:', info.response);
-      // req.flash('success', 'Password reset link has been sent to your email.');
       res.send('<h2 style="color: #1f11ea;">Reset link sent to your email.</h2><a href="/login"><button style="margin-top: 15px;">Back to Login</button></a>');
-      // res.redirect('/login');
+      res.redirect('/login');
     });
   });
 });
+
 app.post('/reset-password/:token', (req, res) => {
   const token = req.params.token;
   const newPassword = req.body.password;
@@ -1097,7 +1096,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000; // Fallback to 3000 if env is missing
+const PORT = process.env.PORT
 
 app.listen(PORT, () => {
     console.log(`Node app is running on Port ${PORT}`);
