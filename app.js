@@ -160,8 +160,7 @@ app.post('/auth', function(req, res) {
       if (err) return res.status(500).send('Server Error');
 
       if (results.length === 0) {
-        // return res.send('Incorrect Email or Password');
-        return res.send('<h2 style="color: blue;"> Incorrect Email or Password</h2>' +
+       return res.send('<h2 style="color: blue;"> Incorrect Email or Password</h2>' +
       '<a href="/login">' +
       '<button style="margin-top: 15px; padding: 10px 20px; background-color: #1f11ea; color: white; border: none; border-radius: 5px;">Back to Login</button>' +
       '</a>'); 
@@ -170,7 +169,6 @@ app.post('/auth', function(req, res) {
       const user = results[0];
       bcrypt.compare(password, user.password, (err, isMatch) => {
         if (err || !isMatch) {
-          // return res.send('Incorrect Email or Password');
           return res.send('<h2 style="color: blue;"> Incorrect Email or Password</h2>' +
       '<a href="/login">' +
       '<button style="margin-top: 15px; padding: 10px 20px; background-color: #1f11ea; color: white; border: none; border-radius: 5px;">Back to Login</button>' +
@@ -185,8 +183,7 @@ app.post('/auth', function(req, res) {
       });
     });
   } else {
-    // res.send('Please enter Email and Password!');
-    res.send(`
+     res.send(`
             <h2 style="color: blue;">Please enter Email and Password!</h2>
                      <a href="/login"> <button style="margin-top: 15px; padding: 10px 20px; background-color: #1f11ea; color: white; border: none; border-radius: 5px;">Back to Login</button>
              </a>   
@@ -925,6 +922,7 @@ app.get('/admin/delete-user/:email', isAdmin, (req, res) => {
 // Display Forgot Password Form
 app.get('/forgot-password', (req, res) => {
   res.render('forgotPassword'); // render forgotPassword.ejs
+  console.log('Rendered forgotPassword view');
 });
 
 // Stylised email for password reset
@@ -1271,4 +1269,4 @@ app.listen(PORT, () => {
 });
 
 
-// This is the end of the app.js file
+// This is the end of the app.js file 
