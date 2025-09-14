@@ -411,6 +411,52 @@ app.get('/admin/view-messages', isAdmin, (req, res) => {
   });
 });
 
+
+
+// Export all messages as CSV
+const { Parser } = require('json2csv');
+
+app.get('/export-messages', (req, res) => {
+  const sql = 'SELECT fname, lname, email, phone, message, submitted_at FROM messages ORDER BY submitted_at DESC';
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error exporting messages:', err);
+      return res.status(500).send('Error exporting messages');
+    }
+
+    try {
+      // Define fields with custom labels
+      const fields = [
+        { label: 'Firstname', value: 'fname' },
+        { label: 'Lastname', value: 'lname' },
+        { label: 'Email', value: 'email' },
+        { label: 'Phone', value: 'phone' },
+        { label: 'Message', value: 'message' },
+        { label: 'Submitted_at', value: 'submitted_at' }
+      ];
+
+      // Convert submitted_at to local time string before exporting
+      const formattedResults = results.map((row) => ({
+        ...row,
+        submitted_at: row.submitted_at ? new Date(row.submitted_at).toLocaleString() : ''
+      }));
+
+      const parser = new Parser({ fields });
+      const csv = parser.parse(formattedResults);
+
+      // Force download
+      res.header('Content-Type', 'text/csv');
+      res.attachment('messages.csv');
+      return res.send(csv);
+    } catch (err) {
+      console.error('Error generating CSV:', err);
+      res.status(500).send('Error generating CSV');
+    }
+  });
+});
+
+
 // Admin Dashboard disply Educator Logs in Pagination
 app.get('/admin/educatorLogs', isAdmin, (req, res) => {
     console.log('Entering /admin/educatorLogs route');
@@ -455,6 +501,66 @@ app.get('/admin/educatorLogs', isAdmin, (req, res) => {
             });
         });
     });
+});
+
+// Export all educator logs as CSV
+app.get('/export-logs', (req, res) => {
+  const sql = `
+    SELECT 
+      l.date, 
+      l.teacher, 
+      c.first_name, 
+      c.last_name, 
+      l.in_time, 
+      l.out_time, 
+      l.activities, 
+      c.status
+    FROM attendance_log l
+    JOIN child c ON l.child_id = c.id
+    ORDER BY l.date DESC
+  `;
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error exporting logs:', err);
+      return res.status(500).send('Error exporting logs');
+    }
+
+    try {
+      // Format data before export
+      const formattedResults = results.map(row => ({
+        date: new Date(row.date).toLocaleDateString('en-NZ'), // Local NZ date (DD/MM/YYYY)
+        teacher: row.teacher || 'Unknown',
+        child_name: `${row.first_name} ${row.last_name}`,
+        in_time: row.in_time || '',
+        out_time: row.out_time || '',
+        activities: row.activities ? row.activities.replace(/\r?\n|\r/g, ' ') : '',
+        status: row.status || ''
+      }));
+
+      // Define CSV headers
+      const fields = [
+        { label: 'Date', value: 'date' },
+        { label: 'Educator', value: 'teacher' },
+        { label: 'Child Name', value: 'child_name' },
+        { label: 'In Time', value: 'in_time' },
+        { label: 'Out Time', value: 'out_time' },
+        { label: 'Activities', value: 'activities' },
+        { label: 'Enrolled Status', value: 'status' }
+      ];
+
+      const parser = new Parser({ fields });
+      const csv = parser.parse(formattedResults);
+
+      // Send as file download
+      res.header('Content-Type', 'text/csv');
+      res.attachment('educator_logs.csv');
+      return res.send(csv);
+    } catch (err) {
+      console.error('Error generating CSV:', err);
+      res.status(500).send('Error generating CSV');
+    }
+  });
 });
 
 
@@ -547,6 +653,75 @@ app.get('/admin/childDetails', isAdmin, (req, res) => {
     });
 });
 
+
+// Export all children in register as CSV
+app.get('/export-register', (req, res) => {
+  const sql = `
+  SELECT 
+  id,
+  first_name,
+  last_name,
+  gender,
+  dob,
+  food_allergy,
+  parent_first_name,
+  parent_last_name,
+  parent_email,
+  parent_phone,
+  date,
+  status
+FROM child
+ORDER BY id ASC
+`;
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error exporting child register:', err);
+      return res.status(500).send('Error exporting child register');
+    }
+
+    try {
+      // Format data before export
+      const formattedResults = results.map(row => ({
+        child_id: row.id,
+        child_name: `${row.first_name} ${row.last_name}`,
+        gender: row.gender,
+        dob: row.dob ? new Date(row.dob).toLocaleDateString('en-NZ') : '',
+        food_allergy: row.food_allergy || 'None',
+        parent_name: `${row.parent_first_name || ''} ${row.parent_last_name || ''}`.trim(),
+        parent_email: row.parent_email || '',
+        parent_phone: row.parent_phone || '',
+        date_registered: row.date ? new Date(row.date).toLocaleDateString('en-NZ') : '',
+        status: row.status
+      }));
+
+      // Define CSV headers
+      const fields = [
+        { label: 'Child ID', value: 'child_id' },
+        { label: 'Child Name', value: 'child_name' },
+        { label: 'Gender', value: 'gender' },
+        { label: 'Date of Birth', value: 'dob' },
+        { label: 'Food Allergy', value: 'food_allergy' },
+        { label: 'Parent Name', value: 'parent_name' },
+        { label: 'Parent Email', value: 'parent_email' },
+        { label: 'Parent Phone', value: 'parent_phone' },
+        { label: 'Date Registered', value: 'date_registered' },
+        { label: 'Enrolled Status', value: 'status' }
+      ];
+
+      const parser = new Parser({ fields });
+      const csv = parser.parse(formattedResults);
+
+      // Send file
+      res.header('Content-Type', 'text/csv');
+      res.attachment('child_register.csv');
+      return res.send(csv);
+    } catch (err) {
+      console.error('Error generating CSV:', err);
+      res.status(500).send('Error generating CSV');
+    }
+  });
+});
 
 
 // This is Admin Edit Child Details route renders
